@@ -1,0 +1,20 @@
+# systemd unit for Life OS backend (OVH Ubuntu)
+# Place: /etc/systemd/system/lifeos-backend.service
+# Then: sudo systemctl daemon-reload && sudo systemctl enable lifeos-backend && sudo systemctl start lifeos-backend
+
+[Unit]
+Description=Life OS API (FastAPI)
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/lifeos/backend
+EnvironmentFile=/var/www/lifeos/backend/.env
+ExecStart=/var/www/lifeos/backend/venv/bin/gunicorn app.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 127.0.0.1:8000 --timeout 120 --access-logfile - --error-logfile -
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
