@@ -38,6 +38,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
+      target: app   # build in Docker (builder stage); do not use dist-only on server
     container_name: lifeos-frontend
     ports:
       - "80:80"
