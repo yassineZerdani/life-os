@@ -6,8 +6,9 @@
 
 services:
   backend:
-    build: .
-    dockerfile: Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: lifeos-backend
     container_name: backend
     command: ["./run-docker-prod.sh"]
