@@ -9,6 +9,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      network: host   # use host DNS so pip can reach PyPI during build
     image: lifeos-backend
     container_name: backend
     command: ["./run-docker-prod.sh"]

@@ -10,6 +10,7 @@ services:
       context: .
       dockerfile: Dockerfile.prod
       target: app
+      network: host   # use host DNS so npm can reach registry during build
     image: lifeos-frontend
     container_name: lifeos-frontend
     ports:
