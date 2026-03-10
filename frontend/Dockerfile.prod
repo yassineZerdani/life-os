@@ -11,7 +11,7 @@ COPY public ./public
 COPY index.html ./
 COPY vite.config.ts tsconfig.json tsconfig.node.json ./
 ENV VITE_API_URL=/api
-RUN export PATH="/app/node_modules/.bin:$PATH" && npm run build
+RUN /app/node_modules/.bin/tsc -b && /app/node_modules/.bin/vite build
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
