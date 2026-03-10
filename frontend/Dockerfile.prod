@@ -2,7 +2,7 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-# Install all deps including devDependencies (typescript, vite) for the build
+# Install all deps including devDependencies (typescript, vite). Use --no-cache if you still see "tsc: not found".
 ENV NODE_ENV=development
 RUN npm ci
 # Copy only source and config so we don't overwrite node_modules
@@ -11,8 +11,7 @@ COPY public ./public
 COPY index.html ./
 COPY vite.config.ts tsconfig.json tsconfig.node.json ./
 ENV VITE_API_URL=/api
-ENV PATH="/app/node_modules/.bin:$PATH"
-RUN npm run build
+RUN export PATH="/app/node_modules/.bin:$PATH" && npm run build
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
