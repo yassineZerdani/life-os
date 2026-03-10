@@ -1,0 +1,49 @@
+# Production stack: one command to run everything.
+# Usage:
+#   1. cp backend/.env.example backend/.env   (edit DATABASE_URL, JWT_SECRET, ALLOWED_ORIGINS)
+#   2. docker compose -f docker-compose.prod.yml up -d --build
+#   3. Open http://YOUR_SERVER_IP (port 80)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lifeos-postgres
+    environment:
+      POSTGRES_USER: lifeos
+      POSTGRES_PASSWORD: lifeos_secret
+      POSTGRES_DB: gemini
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lifeos -d gemini"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: lifeos-backend
+    command: ["./run-docker-prod.sh"]
+    environment:
+      DATABASE_URL: postgresql://lifeos:lifeos_secret@postgres:5432/gemini
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production-use-env}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: lifeos-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

@@ -12,7 +12,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 EXPOSE 8000
-
-COPY run.sh /run.sh
-RUN chmod +x /run.sh
-CMD ["/run.sh"]
+RUN chmod +x run.sh run-production.sh run-docker-prod.sh
+CMD ["./run.sh"]

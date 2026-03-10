@@ -1,8 +1,36 @@
 # Deploy Life OS on OVH Ubuntu
 
-This guide gets the Life OS app running on an OVH Ubuntu server (22.04 or 24.04) with Nginx, a systemd backend service, and optional PostgreSQL (local or managed).
+---
+
+## Docker (easiest – one command)
+
+If you have Docker and Docker Compose on the server, you can run the whole stack without installing Python, Node, or Nginx by hand:
+
+```bash
+# On your OVH Ubuntu server
+sudo apt update && sudo apt install -y docker.io docker-compose-v2 git
+sudo usermod -aG docker $USER
+# Log out and back in (or newgrp docker)
+
+git clone https://github.com/yassineZerdani/life-os.git
+cd life-os
+
+# Set env (optional: override defaults)
+export JWT_SECRET="your-strong-secret-at-least-32-chars"
+export ALLOWED_ORIGINS="http://YOUR_SERVER_IP"   # or https://yourdomain.com
+
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+Then open **http://YOUR_SERVER_IP** (port 80). The frontend container builds the app, serves it with Nginx, and proxies `/api` to the backend. Postgres and backend run in containers; no venv or systemd needed.
+
+To stop: `docker compose -f docker-compose.prod.yml down`
 
 ---
+
+## Manual deploy (Nginx + systemd)
+
+The rest of this guide gets the Life OS app running with Nginx, a systemd backend service, and optional PostgreSQL (local or managed).
 
 ## 1. Server prerequisites
 
