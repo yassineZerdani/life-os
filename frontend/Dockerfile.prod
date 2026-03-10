@@ -13,8 +13,8 @@ COPY public ./public
 COPY index.html ./
 COPY vite.config.ts tsconfig.json tsconfig.node.json ./
 ENV VITE_API_URL=/api
-# Skip tsc -b in Docker; Vite builds without it. Run Vite via node to avoid .bin path issues.
-RUN node node_modules/vite/bin/vite.js build
+# Skip tsc -b in Docker; Vite builds without it. Use npx so the correct vite binary is found.
+RUN npx vite build
 
 # Optional: use pre-built dist (build locally: npm run build, then docker build --target dist-only -f Dockerfile.prod .)
 FROM nginx:alpine AS dist-only
