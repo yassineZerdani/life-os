@@ -14,9 +14,7 @@ COPY index.html ./
 COPY vite.config.ts tsconfig.json tsconfig.node.json ./
 
 ENV VITE_API_URL=/api
-
-# use the local installed binary, not npx
-RUN ./node_modules/.bin/vite build
+RUN npx vite build
 
 FROM nginx:alpine AS dist-only
 COPY dist /usr/share/nginx/html
