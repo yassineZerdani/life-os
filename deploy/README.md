@@ -2,9 +2,9 @@
 
 ---
 
-## Docker (easiest – one command)
+## Docker (build one by one)
 
-If you have Docker and Docker Compose on the server, you can run the whole stack without installing Python, Node, or Nginx by hand:
+Build and run each service separately so you can control order and debug easily:
 
 ```bash
 # On your OVH Ubuntu server
@@ -15,30 +15,35 @@ sudo usermod -aG docker $USER
 git clone https://github.com/yassineZerdani/life-os.git
 cd life-os
 
-# Set env (optional: override defaults)
+# Optional: set env before starting backend
 export JWT_SECRET="your-strong-secret-at-least-32-chars"
 export ALLOWED_ORIGINS="http://YOUR_SERVER_IP"   # or https://yourdomain.com
 
-docker compose -f docker-compose.prod.yml up -d --build
+# 1. Postgres (creates shared network)
+docker compose -f docker-compose.postgres.yml up -d
+
+# 2. Backend
+docker compose -f backend/docker-compose.yml up -d --build
+
+# 3. Frontend (serves on port 80, proxies /api to backend)
+docker compose -f frontend/docker-compose.yml up -d --build
 ```
 
-Then open **http://YOUR_SERVER_IP** (port 80). The frontend container builds the app, serves it with Nginx, and proxies `/api` to the backend. Postgres and backend run in containers; no venv or systemd needed.
+Then open **http://YOUR_SERVER_IP** (port 80). See **[BUILD-ORDER.md](../BUILD-ORDER.md)** in the repo root for more detail.
 
-To stop: `docker compose -f docker-compose.prod.yml down`
+To stop (reverse order): `docker compose -f frontend/docker-compose.yml down`, then backend, then `docker compose -f docker-compose.postgres.yml down`.
 
-**If the frontend image build fails with `npm error Exit handler never called!`** (common on low-RAM VPS): the Dockerfile now sets `NODE_OPTIONS=--max-old-space-size=2048`. If it still fails, build the frontend elsewhere and use the dist-only image:
+**If the frontend image build fails with `npm error Exit handler never called!`** (common on low-RAM VPS): the Dockerfile sets `NODE_OPTIONS=--max-old-space-size=2048`. If it still fails, build the frontend elsewhere and use the dist-only image:
 
 ```bash
 # On your local machine or CI (from repo root)
 cd frontend && npm ci && VITE_API_URL=/api npm run build && cd ..
 
 # Build image using pre-built dist (no npm on server)
-docker build -f frontend/Dockerfile.prod --target dist-only -t life-os-frontend frontend
+docker build -f frontend/Dockerfile.prod --target dist-only -t lifeos-frontend frontend
 
-# Push to your registry, then on the server: pull and use that image in docker-compose.
+# Push to your registry, then on the server: pull and use that image.
 ```
-
-Alternatively, use the [manual deploy](#manual-deploy-nginx--systemd) and build the frontend on the host with Node, then serve the `dist/` with Nginx.
 
 ---
 

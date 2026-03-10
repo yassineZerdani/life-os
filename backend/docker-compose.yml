@@ -1,0 +1,24 @@
+# 2. Build and run backend (after Postgres is up).
+# From repo root:
+#   docker compose -f backend/docker-compose.yml up -d --build
+# Or from backend/: docker compose -f docker-compose.yml up -d --build
+# Requires: lifeos-network and lifeos-postgres running (docker-compose.postgres.yml).
+
+services:
+  backend:
+    build: .
+    dockerfile: Dockerfile
+    image: lifeos-backend
+    container_name: backend
+    command: ["./run-docker-prod.sh"]
+    environment:
+      DATABASE_URL: postgresql://lifeos:lifeos_secret@lifeos-postgres:5432/gemini
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production-use-env}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://aeropyxtech.com,http://aeropyxtech.com}
+    restart: unless-stopped
+    networks:
+      - lifeos-network
+
+networks:
+  lifeos-network:
+    external: true

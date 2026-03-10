@@ -1,0 +1,23 @@
+# 3. Build and run frontend (after backend is up).
+# From repo root:
+#   docker compose -f frontend/docker-compose.yml up -d --build
+# Or from frontend/: docker compose -f docker-compose.yml up -d --build
+# Requires: lifeos-network and lifeos-backend running. Serves on port 80.
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      target: app
+    image: lifeos-frontend
+    container_name: lifeos-frontend
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    networks:
+      - lifeos-network
+
+networks:
+  lifeos-network:
+    external: true
