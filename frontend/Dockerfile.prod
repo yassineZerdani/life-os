@@ -9,7 +9,7 @@ COPY public ./public
 COPY index.html ./
 COPY vite.config.ts tsconfig.json tsconfig.node.json ./
 ENV VITE_API_URL=/api
-RUN ./node_modules/.bin/tsc -b && ./node_modules/.bin/vite build
+RUN node node_modules/typescript/bin/tsc -b && node node_modules/vite/bin/vite build
 
 FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
