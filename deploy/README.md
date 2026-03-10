@@ -26,6 +26,20 @@ Then open **http://YOUR_SERVER_IP** (port 80). The frontend container builds the
 
 To stop: `docker compose -f docker-compose.prod.yml down`
 
+**If the frontend image build fails with `npm error Exit handler never called!`** (common on low-RAM VPS): the Dockerfile now sets `NODE_OPTIONS=--max-old-space-size=2048`. If it still fails, build the frontend elsewhere and use the dist-only image:
+
+```bash
+# On your local machine or CI (from repo root)
+cd frontend && npm ci && VITE_API_URL=/api npm run build && cd ..
+
+# Build image using pre-built dist (no npm on server)
+docker build -f frontend/Dockerfile.prod --target dist-only -t life-os-frontend frontend
+
+# Push to your registry, then on the server: pull and use that image in docker-compose.
+```
+
+Alternatively, use the [manual deploy](#manual-deploy-nginx--systemd) and build the frontend on the host with Node, then serve the `dist/` with Nginx.
+
 ---
 
 ## Manual deploy (Nginx + systemd)
