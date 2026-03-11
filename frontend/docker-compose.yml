@@ -14,7 +14,7 @@ services:
     image: lifeos-frontend
     container_name: lifeos-frontend
     ports:
-      - "80:80"
+      - "8080:80"   # use 8080 if port 80 is taken on the host
     restart: unless-stopped
     networks:
       - lifeos-network
