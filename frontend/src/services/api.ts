@@ -1,5 +1,6 @@
 const base = import.meta.env.VITE_API_URL
-const API_BASE = base ? `${base.replace(/\/$/, '')}/api` : '/api'
+// Base is the full API prefix (e.g. /api or http://host:8000/api). Do not append /api again.
+const API_BASE = base ? base.replace(/\/$/, '') : '/api'
 
 function getAuthHeaders(): Record<string, string> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('lifeos_token') : null

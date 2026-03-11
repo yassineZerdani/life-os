@@ -12,6 +12,7 @@ services:
       network: host   # use host DNS so pip can reach PyPI during build
     image: lifeos-backend
     container_name: backend
+    env_file: .env
     command: ["./run-docker-prod.sh"]
     environment:
       DATABASE_URL: postgresql://lifeos:lifeos_secret@lifeos-postgres:5432/gemini
