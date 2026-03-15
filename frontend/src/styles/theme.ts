@@ -1,8 +1,8 @@
 /**
- * Life OS Design Tokens — coherent light & dark themes.
- * Accent: indigo/violet. Surfaces and text scale per mode.
+ * Life OS Design Tokens — light, dark, boys, girls themes.
+ * Light/dark: indigo/violet accent. Boys: blue. Girls: pink/rose.
  */
-export type ThemeMode = 'light' | 'dark'
+export type ThemeMode = 'light' | 'dark' | 'boys' | 'girls' | 'light-boys' | 'light-girls'
 
 export interface Theme {
   // Surfaces
@@ -136,9 +136,56 @@ const darkTheme: Theme = {
   crCardBg: '#0f172a',
 }
 
+/** Boys theme: dark base + blue accents */
+const boysTheme: Theme = {
+  ...darkTheme,
+  accent: '#3b82f6',
+  accentHover: '#60a5fa',
+  accentLight: 'rgba(59, 130, 246, 0.15)',
+  selectedBg: 'rgba(59, 130, 246, 0.12)',
+}
+
+/** Girls theme: dark base + pink/rose accents */
+const girlsTheme: Theme = {
+  ...darkTheme,
+  accent: '#ec4899',
+  accentHover: '#f472b6',
+  accentLight: 'rgba(236, 72, 153, 0.15)',
+  selectedBg: 'rgba(236, 72, 153, 0.12)',
+}
+
+/** Light boys: light base + blue accents */
+const lightBoysTheme: Theme = {
+  ...lightTheme,
+  accent: '#2563eb',
+  accentHover: '#3b82f6',
+  accentLight: 'rgba(37, 99, 235, 0.12)',
+  selectedBg: 'rgba(37, 99, 235, 0.1)',
+}
+
+/** Light girls: light base + pink accents */
+const lightGirlsTheme: Theme = {
+  ...lightTheme,
+  accent: '#db2777',
+  accentHover: '#ec4899',
+  accentLight: 'rgba(219, 39, 119, 0.12)',
+  selectedBg: 'rgba(219, 39, 119, 0.1)',
+}
+
 export const themes: Record<ThemeMode, Theme> = {
   light: lightTheme,
   dark: darkTheme,
+  boys: boysTheme,
+  girls: girlsTheme,
+  'light-boys': lightBoysTheme,
+  'light-girls': lightGirlsTheme,
+}
+
+/** Themes that use dark Ant Design algorithm */
+const DARK_MODES: ThemeMode[] = ['dark', 'boys', 'girls']
+
+export function isDarkMode(mode: ThemeMode): boolean {
+  return DARK_MODES.includes(mode)
 }
 
 /** Default export for components that don't have theme context yet (e.g. before provider). */

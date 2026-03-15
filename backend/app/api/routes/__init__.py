@@ -25,11 +25,35 @@ from .strategy_library import router as strategy_library_router
 from .learn import router as learn_router
 from .auth import router as auth_router
 from .profile import router as profile_router
+from .body_intelligence import router as body_intelligence_router
+from .wealth import router as wealth_router
+from .journal import router as journal_router
+from .skills import router as skills_router
+from .career import router as career_router
+from .family import router as family_router
+from .love import router as love_router
+from .network import router as network_router
+from .life_memory import router as life_memory_router
+from .persona_lab import router as persona_lab_router
+from .mind_engine import router as mind_engine_router
+from .stripe_routes import router as stripe_router
 
 api_router = APIRouter()
 
 api_router.include_router(auth_router, prefix="/auth", tags=["auth"])
 api_router.include_router(profile_router, prefix="/profile", tags=["profile"])
+api_router.include_router(body_intelligence_router, prefix="/body-intelligence", tags=["body-intelligence"])
+api_router.include_router(wealth_router, prefix="/wealth", tags=["wealth"])
+api_router.include_router(stripe_router, prefix="/stripe", tags=["stripe"])
+api_router.include_router(journal_router, prefix="/journal", tags=["journal"])
+api_router.include_router(skills_router, prefix="/skills", tags=["skills"])
+api_router.include_router(career_router, prefix="/career", tags=["career"])
+api_router.include_router(family_router, prefix="/family", tags=["family"])
+api_router.include_router(love_router, prefix="/love", tags=["love"])
+api_router.include_router(network_router, prefix="/network", tags=["network"])
+api_router.include_router(life_memory_router, prefix="/life-memory", tags=["life-memory"])
+api_router.include_router(persona_lab_router, prefix="/persona-lab", tags=["persona-lab"])
+api_router.include_router(mind_engine_router, prefix="/mind-engine", tags=["mind-engine"])
 api_router.include_router(control_room_router, prefix="/control-room", tags=["control-room"])
 api_router.include_router(strategies_router, prefix="/strategies", tags=["strategies"])
 api_router.include_router(strategy_library_router, prefix="/strategy-library", tags=["strategy-library"])

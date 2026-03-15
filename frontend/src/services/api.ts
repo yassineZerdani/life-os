@@ -1,6 +1,11 @@
 const base = import.meta.env.VITE_API_URL
-// Base is the full API prefix (e.g. /api or http://host:8000/api). Do not append /api again.
-const API_BASE = base ? base.replace(/\/$/, '') : '/api'
+// Base must be the full API root (e.g. /api or http://host:8000/api). If a full URL is set without /api, append it.
+const API_BASE = (() => {
+  if (!base) return '/api'
+  const b = base.replace(/\/$/, '')
+  if (/^https?:\/\//.test(b) && !b.endsWith('/api')) return `${b}/api`
+  return b
+})()
 
 function getAuthHeaders(): Record<string, string> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('lifeos_token') : null

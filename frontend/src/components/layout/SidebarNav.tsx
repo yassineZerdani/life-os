@@ -10,6 +10,7 @@ import {
   HistoryOutlined,
   BarChartOutlined,
   HeartOutlined,
+  HeartTwoTone,
   DollarOutlined,
   BookOutlined,
   TeamOutlined,
@@ -29,6 +30,9 @@ import {
   DownOutlined,
   RightOutlined,
   CheckCircleOutlined,
+  CalendarOutlined,
+  HomeOutlined,
+  ThunderboltOutlined,
 } from '@ant-design/icons'
 import { DOMAIN_COLORS } from '../control-room/constants'
 
@@ -51,6 +55,7 @@ const SIDEBAR_SECTIONS: NavSection[] = [
   {
     title: 'Primary',
     items: [
+      { key: 'today', path: `${BASE}/today`, icon: <CalendarOutlined />, label: 'Today' },
       { key: 'control-room', path: `${BASE}/control-room`, icon: <RocketOutlined />, label: 'Control Room' },
       { key: 'timeline', path: `${BASE}/timeline`, icon: <HistoryOutlined />, label: 'Timeline' },
       { key: 'analytics', path: `${BASE}/analytics`, icon: <BarChartOutlined />, label: 'Analytics' },
@@ -59,12 +64,12 @@ const SIDEBAR_SECTIONS: NavSection[] = [
   {
     title: 'Life Domains',
     items: [
-      { key: 'health', path: `${BASE}/health`, icon: <HeartOutlined />, label: 'Health', color: DOMAIN_COLORS.health },
+      { key: 'health', path: `${BASE}/health/body-map`, icon: <HeartOutlined />, label: 'Health', color: DOMAIN_COLORS.health },
       { key: 'wealth', path: `${BASE}/wealth`, icon: <DollarOutlined />, label: 'Wealth', color: DOMAIN_COLORS.wealth },
       { key: 'skills', path: `${BASE}/skills`, icon: <BookOutlined />, label: 'Skills', color: DOMAIN_COLORS.skills },
       { key: 'network', path: `${BASE}/network`, icon: <TeamOutlined />, label: 'Network', color: DOMAIN_COLORS.network },
       { key: 'career', path: `${BASE}/career`, icon: <TrophyOutlined />, label: 'Career', color: DOMAIN_COLORS.career },
-      { key: 'relationships', path: `${BASE}/relationships`, icon: <UserOutlined />, label: 'Relationships', color: DOMAIN_COLORS.relationships },
+      { key: 'relationships', path: `${BASE}/relationships`, icon: <HeartTwoTone twoToneColor="#be185d" />, label: 'Relationships', color: DOMAIN_COLORS.relationships },
       { key: 'experiences', path: `${BASE}/experiences`, icon: <CompassOutlined />, label: 'Experiences', color: DOMAIN_COLORS.experiences },
       { key: 'identity', path: `${BASE}/identity`, icon: <SmileOutlined />, label: 'Identity', color: DOMAIN_COLORS.identity },
     ],
@@ -101,6 +106,7 @@ const SIDEBAR_SECTIONS: NavSection[] = [
   {
     title: 'Tools',
     items: [
+      { key: 'mind', path: `${BASE}/mind`, icon: <ThunderboltOutlined />, label: 'Mind Engine' },
       { key: 'time-tracking', path: `${BASE}/time-tracking`, icon: <ClockCircleOutlined />, label: 'Time Tracking' },
       { key: 'metrics', path: `${BASE}/metrics`, icon: <LineChartOutlined />, label: 'Metrics' },
       { key: 'goals', path: `${BASE}/goals`, icon: <FlagOutlined />, label: 'Goals' },
@@ -119,9 +125,11 @@ const ALL_ITEMS = SIDEBAR_SECTIONS.flatMap((s) => s.items)
 
 export interface SidebarNavProps {
   collapsed?: boolean
+  /** Callback after navigation (e.g. close mobile drawer). */
+  onNavigate?: () => void
 }
 
-export function SidebarNav({ collapsed }: SidebarNavProps) {
+export function SidebarNav({ collapsed, onNavigate }: SidebarNavProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const theme = useTheme()
@@ -131,7 +139,7 @@ export function SidebarNav({ collapsed }: SidebarNavProps) {
     ALL_ITEMS.filter(
       (i) => location.pathname === i.path || location.pathname.startsWith(i.path + '/')
     )
-      .sort((a, b) => b.path.length - a.path.length)[0]?.key || 'control-room'
+      .sort((a, b) => b.path.length - a.path.length)[0]?.key || 'today'
 
   const toggleSection = (title: string) => {
     setCollapsedSections((prev) => ({ ...prev, [title]: !prev[title] }))
@@ -199,7 +207,10 @@ export function SidebarNav({ collapsed }: SidebarNavProps) {
                   <div
                     role="button"
                     tabIndex={0}
-                    onClick={() => navigate(item.path)}
+                    onClick={() => {
+                      navigate(item.path)
+                      onNavigate?.()
+                    }}
                     onKeyDown={(e) => e.key === 'Enter' && navigate(item.path)}
                     style={{
                       display: 'flex',

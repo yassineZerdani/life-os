@@ -44,8 +44,14 @@ export function TimeTrackingPage() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: 24, fontSize: 28 }}>Time Tracking</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+      <h1 className="app-page-title" style={{ marginBottom: 24, fontSize: 28 }}>Time Tracking</h1>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+          gap: 24,
+        }}
+      >
         <Card title="Log Activity">
           <Form
             form={form}

@@ -11,6 +11,7 @@ import { SimulationSnapshotCard } from '../components/control-room/SimulationSna
 import { LifeTimelineCard } from '../components/control-room/LifeTimelineCard'
 import { ActiveQuestsCard, RecentAchievementsCard } from '../components/control-room/QuestAchievementCards'
 import { LearnSuggestionCard } from '../components/control-room/LearnSuggestionCard'
+import { WealthVaultWidget } from '../components/control-room/WealthVaultWidget'
 
 export function ControlRoomPage() {
   const { data, isLoading } = useQuery({
@@ -85,6 +86,7 @@ export function ControlRoomPage() {
       >
         <RocketOutlined style={{ fontSize: 28, color: theme.accent }} />
         <h1
+          className="app-page-title"
           style={{
             margin: 0,
             fontSize: 36,
@@ -141,6 +143,7 @@ export function ControlRoomPage() {
             gap,
           }}
         >
+          <WealthVaultWidget />
           <ActiveQuestsCard quests={quests} loading={isLoading} />
           <RecentAchievementsCard achievements={achievements} loading={isLoading} />
           <LearnSuggestionCard article={recommended_article ?? null} loading={isLoading} />

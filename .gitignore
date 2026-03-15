@@ -58,3 +58,9 @@ htmlcov/
 *.bak
 *.tmp
 .cache/
+
+# database
+*.db
+
+# mobile
+mobile/

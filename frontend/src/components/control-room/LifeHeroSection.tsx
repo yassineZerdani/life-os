@@ -1,6 +1,7 @@
 import { RiseOutlined, FallOutlined, MinusOutlined } from '@ant-design/icons'
 import type { ControlRoomSummary } from '../../types/controlRoom'
 import { useTheme } from '../../hooks/useTheme'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { useCountUp } from '../../hooks/useCountUp'
 import { ControlRoomCard } from './ControlRoomCard'
 import { DomainRadarChart } from './DomainRadarChart'
@@ -13,6 +14,8 @@ interface LifeHeroSectionProps {
 
 export function LifeHeroSection({ data, loading }: LifeHeroSectionProps) {
   const theme = useTheme()
+  const screens = useBreakpoint()
+  const chartSize = screens.xs ? 260 : 320
   const score = useCountUp(Math.round(data.life_score), 900, !loading)
   const level = useCountUp(data.total_level, 700, !loading)
   const xp = useCountUp(data.total_xp, 1000, !loading, 0)
@@ -153,6 +156,7 @@ export function LifeHeroSection({ data, loading }: LifeHeroSectionProps) {
           </div>
         </div>
         <div
+          className="life-hero-chart-wrap"
           style={{
             width: 320,
             minHeight: 320,
@@ -161,7 +165,7 @@ export function LifeHeroSection({ data, loading }: LifeHeroSectionProps) {
             justifyContent: 'center',
           }}
         >
-          <DomainRadarChart domains={data.domains} loading={loading} size={320} />
+          <DomainRadarChart domains={data.domains} loading={loading} size={chartSize} />
         </div>
       </div>
     </ControlRoomCard>

@@ -1,5 +1,6 @@
 /**
  * TopBar — Global search, quick add, theme toggle, notifications, profile.
+ * On mobile/tablet: hamburger menu (onMenuClick), compact search/add.
  */
 import { useState } from 'react'
 import { useTheme } from '../../hooks/useTheme'
@@ -11,8 +12,8 @@ import {
   PlusOutlined,
   BellOutlined,
   UserOutlined,
-  MoonOutlined,
-  SunOutlined,
+  BgColorsOutlined,
+  MenuOutlined,
   ClockCircleOutlined,
   CalendarOutlined,
   LineChartOutlined,
@@ -22,6 +23,13 @@ import {
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { useAppStore } from '../../store/useAppStore'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
+import type { ThemeMode } from '../../styles/theme'
+
+export interface TopBarProps {
+  /** When set (e.g. on mobile), show hamburger that calls this to open sidebar drawer. */
+  onMenuClick?: () => void
+}
 
 function useQuickAddItems(navigate: (path: string) => void): MenuProps['items'] {
   return [
@@ -34,15 +42,26 @@ function useQuickAddItems(navigate: (path: string) => void): MenuProps['items'] 
   ]
 }
 
-export function TopBar() {
+const THEME_OPTIONS: { key: ThemeMode; label: string }[] = [
+  { key: 'light', label: 'Light' },
+  { key: 'dark', label: 'Dark' },
+  { key: 'boys', label: 'Boys' },
+  { key: 'girls', label: 'Girls' },
+  { key: 'light-boys', label: 'Light Boys' },
+  { key: 'light-girls', label: 'Light Girls' },
+]
+
+export function TopBar({ onMenuClick }: TopBarProps) {
   const [searchFocused, setSearchFocused] = useState(false)
   const navigate = useNavigate()
   const { user, signOut } = useAuth()
   const theme = useTheme()
   const themeMode = useAppStore((s) => s.themeMode)
-  const toggleTheme = useAppStore((s) => s.toggleTheme)
+  const setThemeMode = useAppStore((s) => s.setThemeMode)
   const quickAddItems = useQuickAddItems(navigate)
   const quickAddMenu = { items: quickAddItems }
+  const screens = useBreakpoint()
+  const isSmall = !screens.md
 
   const profileMenu: MenuProps['items'] = [
     { key: 'profile', label: user?.name || user?.email || 'Profile', onClick: () => {} },
@@ -55,23 +74,34 @@ export function TopBar() {
     <div
       style={{
         height: 60,
-        padding: '0 24px',
+        padding: isSmall ? '0 12px' : '0 24px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        gap: 8,
         background: theme.topBarBg,
         borderBottom: `1px solid ${theme.topBarBorder}`,
         boxShadow: theme.shadowSm,
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flex: 1, maxWidth: 480 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: isSmall ? 8 : 16, flex: 1, minWidth: 0, maxWidth: isSmall ? 'none' : 480 }}>
+        {onMenuClick && (
+          <Button
+            type="text"
+            icon={<MenuOutlined />}
+            onClick={onMenuClick}
+            aria-label="Open menu"
+            style={{ color: theme.textSecondary, flexShrink: 0 }}
+          />
+        )}
         <Input
-          placeholder="Search... (Ctrl+K)"
+          placeholder={isSmall ? 'Search' : 'Search... (Ctrl+K)'}
           prefix={<SearchOutlined style={{ color: theme.textMuted }} />}
           onFocus={() => setSearchFocused(true)}
           onBlur={() => setSearchFocused(false)}
           style={{
-            width: 280,
+            width: isSmall ? 120 : 280,
+            maxWidth: '100%',
             background: searchFocused ? theme.contentBg : theme.contentBg,
             border: `1px solid ${searchFocused ? theme.accent : theme.border}`,
             borderRadius: theme.radius,
@@ -91,19 +121,30 @@ export function TopBar() {
               boxShadow: theme.shadowSm,
             }}
           >
-            Quick Add
+            {!isSmall && 'Quick Add'}
           </Button>
         </Dropdown>
       </div>
 
-      <Space size={12}>
-        <Button
-          type="text"
-          icon={themeMode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
-          onClick={toggleTheme}
-          style={{ color: theme.textSecondary }}
-          title={themeMode === 'dark' ? 'Light mode' : 'Dark mode'}
-        />
+      <Space size={isSmall ? 4 : 12}>
+        <Dropdown
+          menu={{
+            items: THEME_OPTIONS.map((o) => ({
+              key: o.key,
+              label: o.label,
+              onClick: () => setThemeMode(o.key),
+            })),
+          }}
+          trigger={['click']}
+          placement="bottomRight"
+        >
+          <Button
+            type="text"
+            icon={<BgColorsOutlined />}
+            style={{ color: theme.textSecondary }}
+            title="Theme"
+          />
+        </Dropdown>
         <Badge count={0} size="small">
           <Button
             type="text"
@@ -114,7 +155,7 @@ export function TopBar() {
         </Badge>
         <Dropdown menu={{ items: profileMenu }} trigger={['click']} placement="bottomRight">
           <Avatar
-            size={36}
+            size={isSmall ? 32 : 36}
             icon={<UserOutlined />}
             style={{ background: theme.accent, cursor: 'pointer' }}
           />

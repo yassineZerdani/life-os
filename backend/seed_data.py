@@ -100,6 +100,18 @@ def seed():
         from seed_knowledge import seed_knowledge as seed_learn
         seed_learn()
 
+        # Human Body Intelligence (body systems + organs)
+        from seed_body_intelligence import seed_body_intelligence as seed_body
+        seed_body()
+
+        # Full organ intelligence DB (nutrients, movements, symptoms, ~70 organs, mappings)
+        from seed_organ_intelligence_full import seed_full as seed_organ_full
+        seed_organ_full()
+
+        # Wealth: budget categories (50/30/20)
+        from seed_wealth import seed_budget_categories
+        seed_budget_categories(db)
+
         print("Seed completed successfully! (Essential data only - no mock data)")
     finally:
         db.close()

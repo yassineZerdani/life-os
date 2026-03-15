@@ -26,8 +26,9 @@ export function AppSettingsPage() {
       <Text style={{ color: theme.textSecondary, display: 'block', marginBottom: 24 }}>
         Theme, notifications, timezone, and language.
       </Text>
-      <Card style={{ maxWidth: 560, background: theme.cardBg, border: `1px solid ${theme.borderColor ?? '#e2e8f0'}` }}>
+      <Card style={{ maxWidth: 720, background: theme.cardBg, border: `1px solid ${theme.borderColor ?? '#e2e8f0'}` }}>
         <Form
+          className="form-grid"
           layout="vertical"
           initialValues={{
             theme: data.theme ?? 'system',

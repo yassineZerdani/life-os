@@ -37,7 +37,7 @@ export function AuthPage({ initialTab }: AuthPageProps) {
   // Redirect when already authenticated
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
-      navigate('/app/control-room', { replace: true })
+      navigate('/app/today', { replace: true })
     }
   }, [authLoading, isAuthenticated, navigate])
 
@@ -46,7 +46,7 @@ export function AuthPage({ initialTab }: AuthPageProps) {
     setError('')
     try {
       await signIn(values.email, values.password)
-      navigate('/app/control-room', { replace: true })
+      navigate('/app/today', { replace: true })
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Sign in failed')
     } finally {
@@ -59,7 +59,7 @@ export function AuthPage({ initialTab }: AuthPageProps) {
     setError('')
     try {
       await signUp(values.email, values.name, values.password)
-      navigate('/app/control-room', { replace: true })
+      navigate('/app/today', { replace: true })
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Sign up failed')
     } finally {

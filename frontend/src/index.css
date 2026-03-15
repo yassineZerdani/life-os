@@ -19,6 +19,33 @@ html.dark body {
   min-height: 100vh;
 }
 
+/* ========== Responsive layout (tablets & phones) ========== */
+.app-content-area {
+  margin: 24px;
+  padding: 24px;
+}
+@media (max-width: 991px) {
+  .app-content-area {
+    margin: 16px;
+    padding: 16px;
+  }
+}
+@media (max-width: 575px) {
+  .app-content-area {
+    margin: 12px;
+    padding: 12px;
+  }
+  .app-page-title {
+    font-size: 24px !important;
+  }
+  .life-hero-chart-wrap {
+    width: 100% !important;
+    max-width: 280px !important;
+    min-height: 260px !important;
+    margin: 0 auto;
+  }
+}
+
 /* App sidebar scrollable — Sider wraps children; force flex + height so nav scrolls */
 .lifeos-app-sider.ant-layout-sider {
   display: flex !important;
@@ -150,5 +177,124 @@ html.dark .lifeos-sidebar-nav::-webkit-scrollbar-thumb:hover {
 @media (max-width: 600px) {
   .auth-illustration__art {
     display: none;
+  }
+}
+
+/* ========== Modals & popups — fit screen, scroll when needed ========== */
+.ant-modal-wrap {
+  padding: 24px;
+  overflow-y: auto;
+}
+.ant-modal {
+  max-height: calc(100vh - 48px);
+  margin: auto;
+}
+.ant-modal .ant-modal-content {
+  max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
+}
+.ant-modal .ant-modal-body {
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Modal — mobile: full width with padding */
+@media (max-width: 575px) {
+  .ant-modal-wrap {
+    padding: 12px;
+  }
+  .ant-modal {
+    max-width: calc(100vw - 24px);
+  }
+}
+
+/* Drawer — fit viewport */
+.ant-drawer-body {
+  overflow-y: auto;
+  max-height: calc(100vh - 55px);
+}
+
+/* Form inputs side by side (2 columns) in modals — not stacked vertically */
+.ant-modal .ant-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+.ant-modal .ant-form .ant-form-item {
+  margin-bottom: 16px;
+}
+/* TextArea / description fields span full width */
+.ant-modal .ant-form .ant-form-item:has(textarea),
+.ant-modal .ant-form .ant-form-item:has(.ant-input-textarea) {
+  grid-column: 1 / -1;
+}
+/* Submit row spans full width */
+.ant-modal .ant-form .ant-form-item:last-child {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+@media (max-width: 480px) {
+  .ant-modal .ant-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Same 2-column layout for forms in Drawers */
+.ant-drawer .ant-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+.ant-drawer .ant-form .ant-form-item {
+  margin-bottom: 16px;
+}
+.ant-drawer .ant-form .ant-form-item:has(textarea),
+.ant-drawer .ant-form .ant-form-item:has(.ant-input-textarea) {
+  grid-column: 1 / -1;
+}
+.ant-drawer .ant-form .ant-form-item:last-child {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+@media (max-width: 480px) {
+  .ant-drawer .ant-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Full-page forms (e.g. settings) — 2 columns to fit without scrolling */
+.form-grid.ant-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 24px;
+}
+.form-grid .ant-form-item {
+  margin-bottom: 16px;
+}
+.form-grid .ant-form-item:has(textarea),
+.form-grid .ant-form-item:has(.ant-input-textarea) {
+  grid-column: 1 / -1;
+}
+.form-grid .ant-form-item:last-child {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+@media (max-width: 640px) {
+  .form-grid.ant-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Settings sections — 2-column grid */
+.settings-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media (max-width: 768px) {
+  .settings-sections-grid {
+    grid-template-columns: 1fr;
   }
 }

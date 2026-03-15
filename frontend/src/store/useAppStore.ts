@@ -4,10 +4,12 @@ import type { ThemeMode } from '../styles/theme'
 
 const THEME_KEY = 'lifeos-theme'
 
+const VALID_THEMES: ThemeMode[] = ['light', 'dark', 'boys', 'girls', 'light-boys', 'light-girls']
+
 function getStoredTheme(): ThemeMode {
   try {
     const v = localStorage.getItem(THEME_KEY)
-    if (v === 'dark' || v === 'light') return v
+    if (v && VALID_THEMES.includes(v as ThemeMode)) return v as ThemeMode
   } catch {}
   return 'light'
 }
@@ -36,7 +38,9 @@ export const useAppStore = create<AppState>((set) => ({
   },
   toggleTheme: () =>
     set((s) => {
-      const next = s.themeMode === 'light' ? 'dark' : 'light'
+      const cycle: ThemeMode[] = ['light', 'dark', 'boys', 'girls', 'light-boys', 'light-girls']
+      const i = cycle.indexOf(s.themeMode)
+      const next = cycle[(i + 1) % cycle.length]
       try {
         localStorage.setItem(THEME_KEY, next)
       } catch {}

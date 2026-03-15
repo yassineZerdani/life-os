@@ -2,13 +2,12 @@
  * Landing / informational page — the first page visitors see.
  * Outside the dashboard (no auth required). Public-facing.
  */
-import { Button, Typography, Spin } from 'antd'
+import { Button, Typography, Spin, Dropdown } from 'antd'
 import {
   RocketOutlined,
   LoginOutlined,
   UserAddOutlined,
-  MoonOutlined,
-  SunOutlined,
+  BgColorsOutlined,
   HeartOutlined,
   BookOutlined,
   BarChartOutlined,
@@ -105,13 +104,27 @@ export function LandingPage() {
           <span style={{ fontWeight: 700, fontSize: 18, color: theme.textPrimary }}>Life OS</span>
         </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Button
-            type="text"
-            icon={themeMode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
-            onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
-            style={{ color: theme.textMuted }}
-            title={themeMode === 'dark' ? 'Light mode' : 'Dark mode'}
-          />
+          <Dropdown
+            menu={{
+              items: [
+                { key: 'light', label: 'Light', onClick: () => setThemeMode('light') },
+                { key: 'dark', label: 'Dark', onClick: () => setThemeMode('dark') },
+                { key: 'boys', label: 'Boys', onClick: () => setThemeMode('boys') },
+                { key: 'girls', label: 'Girls', onClick: () => setThemeMode('girls') },
+                { key: 'light-boys', label: 'Light Boys', onClick: () => setThemeMode('light-boys') },
+                { key: 'light-girls', label: 'Light Girls', onClick: () => setThemeMode('light-girls') },
+              ],
+            }}
+            trigger={['click']}
+            placement="bottomRight"
+          >
+            <Button
+              type="text"
+              icon={<BgColorsOutlined />}
+              style={{ color: theme.textMuted }}
+              title="Theme"
+            />
+          </Dropdown>
           {isAuthenticated ? (
             <Button type="primary" onClick={() => navigate('/app')} style={{ background: theme.accent, borderColor: theme.accent }}>
               Go to app

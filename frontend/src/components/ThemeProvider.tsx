@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 import { ConfigProvider, theme as antdTheme } from 'antd'
 import { useAppStore } from '../store/useAppStore'
-import { getTheme } from '../styles/theme'
+import { getTheme, isDarkMode } from '../styles/theme'
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const themeMode = useAppStore((s) => s.themeMode)
   const t = getTheme(themeMode)
-  const isDark = themeMode === 'dark'
+  const isDark = isDarkMode(themeMode)
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', themeMode)
@@ -37,6 +37,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
             bodyBg: t.contentBg,
             headerBg: t.topBarBg,
             siderBg: t.sidebarBg,
+          },
+          Modal: {
+            contentBg: t.contentCardBg,
           },
         },
       }}

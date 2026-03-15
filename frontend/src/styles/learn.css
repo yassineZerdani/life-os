@@ -8,6 +8,12 @@
   padding: 0 24px;
 }
 
+@media (max-width: 575px) {
+  .learn-container {
+    padding: 0 12px;
+  }
+}
+
 .learn-article-layout {
   display: grid;
   grid-template-columns: 1fr 300px;

@@ -4,6 +4,8 @@ export const DOMAIN_COLORS: Record<string, string> = {
   skills: '#6366f1',
   network: '#8b5cf6',
   career: '#f97316',
+  family: '#d946ef',
+  love: '#be185d',
   relationships: '#ec4899',
   experiences: '#06b6d4',
   identity: '#64748b',
